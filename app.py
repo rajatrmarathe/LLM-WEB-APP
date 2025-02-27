@@ -1,13 +1,29 @@
 from flask import Flask, request, jsonify, render_template
 import faiss
-import numpy as np
+#import numpy as np
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 import openai
 import torch
+import os
+from dotenv import load_dotenv
+
 
 # Initialize Flask app
 app = Flask(__name__)
+
+load_dotenv()
+
+#openai.api_key = os.getenv("OPENAI_API_KEY")  # Fetch API key from environment variable
+#print(openai.api_key)
+#print(os.environ)
+
+# Retrieve the API key
+openai_api_key = os.getenv("OPENAI_API_KEY")
+
+# Check if the key is loaded correctly
+if openai_api_key is None:
+    raise ValueError("OPENAI_API_KEY is not set. Check your .env file.") 
 
 # Load the embedding model
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -46,16 +62,14 @@ def search(query, top_k=5, mode="both"):
 
     return sorted(results, key=lambda x: x["score"])[:top_k]
 
-query = "project management"
-results = search(query)
-for r in results:
-    print(f"Sentence: {r['sentence']} | Score: {r['score']}")
+#query = "project management"
+#results = search(query)
+#for r in results:
+ #   print(f"Sentence: {r['sentence']} | Score: {r['score']}")
 
 def summarize_sentences(sentences):
     """Summarize top sentences using OpenAI API."""
     try:
-        openai.api_key = "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"  # Replace with actual key
-        
         prompt = "Summarize the following sentences:\n\n" + "\n".join(sentences)
         
         response = openai.chat.completions.create(  # Updated syntax
