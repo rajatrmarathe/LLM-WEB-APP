@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 faiss_cpu==1.10.0
 Flask==3.1.0
 openai==1.64.0
@@ -5,3 +6,4 @@ pandas==2.2.3
 python-dotenv==1.0.1
 sentence_transformers==3.4.1
 torch==2.6.0
+=======
