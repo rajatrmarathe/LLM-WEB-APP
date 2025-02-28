@@ -34,8 +34,12 @@ df = pd.read_excel("pad_sentences_for_search_engine.xlsx", engine="openpyxl")
 sentences = df["sentence_text"].dropna().tolist()  
 
 # Generate embeddings
-sentence_vectors = model.encode(sentences, convert_to_numpy=True, batch_size=256, show_progress_bar=True)
-
+if not os.path.exists("sentence_vectors.npy"):
+    sentence_vectors = model.encode(sentences, convert_to_numpy=True, batch_size=256, show_progress_bar=True)
+    np.save("sentence_vectors.npy", sentence_vectors)  # Save to disk
+else:
+    sentence_vectors = np.load("sentence_vectors.npy")  # Load from disk
+    
 # Create FAISS index
 dimension = sentence_vectors.shape[1]
 faiss_index = faiss.IndexFlatL2(dimension)
